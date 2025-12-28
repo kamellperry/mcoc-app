@@ -1,50 +1,43 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import {
-  UserIcon,
-  BellIcon,
-  ShieldIcon,
-  LogOutIcon,
-  ChevronRightIcon,
-} from "lucide-react";
+import { useRouter } from 'next/navigation';
+import { motion } from 'motion/react';
+import { UserIcon, BellIcon, ShieldIcon, LogOutIcon, ChevronRightIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 export default function SettingsPage() {
   const router = useRouter();
 
   function handleLogout() {
-    // Mock logout - redirect to landing
-    router.push("/");
+    router.push('/');
   }
 
   const settingsGroups = [
     {
-      title: "Account",
+      title: 'Account',
       items: [
         {
           icon: UserIcon,
-          label: "Profile",
-          description: "Manage your account details",
+          label: 'Profile',
+          description: 'Manage your account',
           onClick: () => {},
         },
         {
           icon: ShieldIcon,
-          label: "Connected Account",
-          description: "MCOC account connection",
+          label: 'Connected Account',
+          description: 'MCOC connection',
           onClick: () => {},
         },
       ],
     },
     {
-      title: "Preferences",
+      title: 'Preferences',
       items: [
         {
           icon: BellIcon,
-          label: "Notifications",
-          description: "Claim alerts and updates",
+          label: 'Notifications',
+          description: 'Claim alerts',
           onClick: () => {},
         },
       ],
@@ -52,68 +45,72 @@ export default function SettingsPage() {
   ];
 
   return (
-    <>
-      <header className="px-4 pt-4 pb-2 sm:px-6 sm:pt-6">
-        <h1 className="text-foreground text-xl font-bold sm:text-2xl">
+    <div className='px-4 sm:px-6'>
+      <header className='pt-4 pb-6 sm:pt-6'>
+        <motion.h1
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className='text-foreground text-xl font-semibold tracking-tight'
+        >
           Settings
-        </h1>
-        <p className="text-muted-foreground mt-0.5 text-sm">
-          Manage your preferences
-        </p>
+        </motion.h1>
       </header>
 
-      <div className="space-y-6 px-4 pt-4 sm:px-6">
-        {settingsGroups.map((group) => (
-          <div key={group.title}>
-            <h2 className="text-muted-foreground mb-2 text-xs font-semibold uppercase tracking-wider">
+      <div className='space-y-6'>
+        {settingsGroups.map((group, groupIndex) => (
+          <motion.div
+            key={group.title}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: groupIndex * 0.05 }}
+          >
+            <h2 className='text-muted-foreground mb-1.5 text-[11px] font-semibold uppercase tracking-wider px-1'>
               {group.title}
             </h2>
-            <Card>
-              <CardContent className="p-0">
-                {group.items.map((item, index) => (
-                  <div key={item.label}>
-                    {index > 0 && <Separator />}
-                    <button
-                      onClick={item.onClick}
-                      className="hover:bg-muted/50 flex w-full items-center gap-3 p-4 text-left transition-colors"
-                    >
-                      <div className="bg-muted flex size-10 shrink-0 items-center justify-center rounded-full">
-                        <item.icon className="text-muted-foreground size-5" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <span className="text-foreground text-sm font-medium">
-                          {item.label}
-                        </span>
-                        <p className="text-muted-foreground text-xs">
-                          {item.description}
-                        </p>
-                      </div>
-                      <ChevronRightIcon className="text-muted-foreground size-5" />
-                    </button>
+            <div className='rounded-xl bg-muted/30 overflow-hidden'>
+              {group.items.map((item, index) => (
+                <Button
+                  key={item.label}
+                  variant='ghost'
+                  onClick={item.onClick}
+                  className={cn(
+                    'w-full h-auto justify-start gap-3 px-3.5 py-3 rounded-none',
+                    'hover:bg-muted/60 active:bg-muted',
+                    index > 0 && 'border-t border-border/30'
+                  )}
+                >
+                  <item.icon className='size-[18px] text-muted-foreground group-hover/button:text-foreground/70 transition-colors shrink-0' />
+                  <div className='min-w-0 flex-1 text-left'>
+                    <span className='text-foreground text-[15px] font-medium block leading-tight'>{item.label}</span>
+                    <span className='text-muted-foreground text-xs leading-tight font-normal'>{item.description}</span>
                   </div>
-                ))}
-              </CardContent>
-            </Card>
-          </div>
+                  <ChevronRightIcon className='size-4 text-muted-foreground/40 shrink-0' />
+                </Button>
+              ))}
+            </div>
+          </motion.div>
         ))}
 
         {/* Logout */}
-        <div className="pt-4">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          className='pt-2'
+        >
           <Button
-            variant="outline"
-            className="text-destructive hover:bg-destructive/10 w-full"
+            variant='destructive'
             onClick={handleLogout}
+            className='w-full h-auto gap-2 py-3'
           >
-            <LogOutIcon className="mr-2 size-4" />
-            Log Out
+            <LogOutIcon className='size-[18px]' />
+            <span className='text-[15px] font-medium'>Log Out</span>
           </Button>
-        </div>
+        </motion.div>
 
-        {/* Version info */}
-        <p className="text-muted-foreground/60 pb-4 text-center text-xs">
-          MCOC Claimer v1.0.0
-        </p>
+        {/* Version */}
+        <p className='text-muted-foreground/50 pt-2 pb-4 text-center text-[11px]'>MCOC Claimer v1.0.0</p>
       </div>
-    </>
+    </div>
   );
 }

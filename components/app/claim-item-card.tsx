@@ -1,74 +1,88 @@
-"use client";
+'use client';
 
-import { CheckIcon, ClockIcon } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import type { FreeItem } from "@/lib/types";
-import { formatCountdown } from "@/lib/mock-data";
+import { motion } from 'motion/react';
+import { Button } from '@/components/ui/button';
+import type { FreeItem } from '@/lib/types';
+import { formatCountdown } from '@/lib/mock-data';
+import { cn } from '@/lib/utils';
 
 interface ClaimItemCardProps {
   item: FreeItem;
+  index?: number;
 }
 
-export function ClaimItemCard({ item }: ClaimItemCardProps) {
+export function ClaimItemCard({ item, index = 0 }: ClaimItemCardProps) {
   const isClaimed = item.limits.per_user.available === 0;
   const resetTime = item.limits.per_user.recurrent_schedule?.reset_next_date;
   const intervalType = item.limits.per_user.recurrent_schedule?.interval_type;
 
-  // Get a placeholder gradient based on item type
-  const gradientClass = getGradientClass(intervalType);
+  const gradientStyle = getGradientStyle(intervalType);
 
   return (
-    <Card className="w-[140px] shrink-0 overflow-hidden sm:w-[160px]">
-      {/* Image placeholder with gradient */}
-      <div
-        className={`aspect-square w-full ${gradientClass} flex items-center justify-center`}
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.03 }}
+      className="group"
+    >
+      <Button
+        variant="ghost"
+        className="w-full h-auto justify-start gap-3 rounded-xl bg-muted/20 p-2.5 pr-4 hover:bg-muted/40 active:scale-[0.99] active:bg-muted/50"
       >
-        <div className="text-4xl opacity-80">
-          {intervalType === "daily" ? "💎" : "🔮"}
+        {/* Thumbnail */}
+        <div
+          className="relative size-12 shrink-0 rounded-lg overflow-hidden shadow-sm"
+          style={gradientStyle}
+        >
+          {/* Inner glow effect */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent" />
+          {/* Crystal icon */}
+          <div className="absolute inset-0 flex items-center justify-center text-xl drop-shadow-sm">
+            {intervalType === 'weekly' ? '💎' : '✨'}
+          </div>
         </div>
-      </div>
 
-      <CardContent className="p-3">
-        {/* Item name */}
-        <h3 className="text-foreground line-clamp-2 text-xs font-semibold leading-tight">
-          {item.name}
-        </h3>
-
-        {/* Status badge */}
-        <div className="mt-2">
-          {isClaimed ? (
-            <Badge
-              variant="secondary"
-              className="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-            >
-              <CheckIcon className="mr-1 size-3" />
-              Claimed
-            </Badge>
-          ) : (
-            <Badge variant="outline">
-              <ClockIcon className="mr-1 size-3" />
-              Available
-            </Badge>
+        {/* Content */}
+        <div className="min-w-0 flex-1 text-left">
+          <h3 className="text-foreground text-[15px] font-medium leading-tight tracking-tight truncate">
+            {item.name}
+          </h3>
+          {resetTime && (
+            <p className="text-muted-foreground text-xs tabular-nums mt-0.5 font-normal">
+              {isClaimed ? `Next in ${formatCountdown(resetTime)}` : 'Available now'}
+            </p>
           )}
         </div>
 
-        {/* Reset time */}
-        {resetTime && isClaimed && (
-          <p className="text-muted-foreground mt-2 text-[10px]">
-            Next: {formatCountdown(resetTime)}
-          </p>
-        )}
-      </CardContent>
-    </Card>
+        {/* Status indicator */}
+        <div className="flex items-center gap-1.5 shrink-0">
+          <div
+            className={cn(
+              'size-2 rounded-full',
+              isClaimed ? 'bg-emerald-500' : 'bg-amber-500 animate-pulse'
+            )}
+          />
+          <span
+            className={cn(
+              'text-xs',
+              isClaimed ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'
+            )}
+          >
+            {isClaimed ? 'Claimed' : 'Ready'}
+          </span>
+        </div>
+      </Button>
+    </motion.div>
   );
 }
 
-function getGradientClass(
-  intervalType: "daily" | "weekly" | undefined
-): string {
-  if (intervalType === "weekly") {
-    return "bg-gradient-to-br from-purple-400 via-purple-500 to-indigo-600";
+function getGradientStyle(intervalType: 'daily' | 'weekly' | undefined): React.CSSProperties {
+  if (intervalType === 'weekly') {
+    return {
+      background: 'linear-gradient(135deg, #8B5CF6 0%, #6366F1 50%, #4F46E5 100%)',
+    };
   }
-  return "bg-gradient-to-br from-amber-400 via-orange-500 to-rose-500";
+  return {
+    background: 'linear-gradient(135deg, #F59E0B 0%, #F97316 50%, #EF4444 100%)',
+  };
 }

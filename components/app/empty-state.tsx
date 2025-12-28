@@ -1,7 +1,8 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Gamepad2Icon } from "lucide-react";
+import { motion } from 'motion/react';
+import { Button } from '@/components/ui/button';
+import { Gamepad2Icon } from 'lucide-react';
 
 interface EmptyStateProps {
   onConnect: () => void;
@@ -9,27 +10,30 @@ interface EmptyStateProps {
 
 export function EmptyState({ onConnect }: EmptyStateProps) {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center px-4 py-12 sm:px-6">
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex flex-1 flex-col items-center justify-center px-4 py-12 sm:px-6"
+    >
       {/* Illustration */}
-      <div className="bg-muted mb-6 flex size-24 items-center justify-center rounded-2xl">
-        <Gamepad2Icon className="text-muted-foreground size-12" />
+      <div className="mb-5 flex size-20 items-center justify-center rounded-2xl bg-muted/40">
+        <Gamepad2Icon className="text-muted-foreground/60 size-10" />
       </div>
 
       {/* Title */}
-      <h2 className="text-foreground text-center text-xl font-bold sm:text-2xl">
+      <h2 className="text-foreground text-center text-lg font-semibold tracking-tight">
         Connect Your Account
       </h2>
 
       {/* Description */}
-      <p className="text-muted-foreground mt-2 max-w-xs text-center text-sm">
-        Link your Marvel Contest of Champions account to automatically claim
-        your daily rewards
+      <p className="text-muted-foreground mt-1.5 max-w-[260px] text-center text-sm leading-relaxed">
+        Link your MCOC account to automatically claim daily rewards
       </p>
 
       {/* CTA */}
-      <Button size="lg" className="mt-6" onClick={onConnect}>
+      <Button size="lg" className="mt-5" onClick={onConnect}>
         Connect Account
       </Button>
-    </div>
+    </motion.div>
   );
 }

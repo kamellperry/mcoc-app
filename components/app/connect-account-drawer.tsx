@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { Loader2Icon } from "lucide-react";
+import * as React from 'react';
+import { Loader2Icon } from 'lucide-react';
 import {
   Drawer,
   DrawerContent,
@@ -9,10 +9,10 @@ import {
   DrawerTitle,
   DrawerDescription,
   DrawerFooter,
-} from "@/components/ui/drawer";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+} from '@/components/ui/drawer';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 
 interface ConnectAccountDrawerProps {
   open: boolean;
@@ -20,14 +20,10 @@ interface ConnectAccountDrawerProps {
   onConnect: (email: string, password: string) => Promise<void>;
 }
 
-export function ConnectAccountDrawer({
-  open,
-  onOpenChange,
-  onConnect,
-}: ConnectAccountDrawerProps) {
+export function ConnectAccountDrawer({ open, onOpenChange, onConnect }: ConnectAccountDrawerProps) {
   const [isLoading, setIsLoading] = React.useState(false);
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -36,8 +32,8 @@ export function ConnectAccountDrawer({
     try {
       await onConnect(email, password);
       onOpenChange(false);
-      setEmail("");
-      setPassword("");
+      setEmail('');
+      setPassword('');
     } finally {
       setIsLoading(false);
     }
@@ -52,8 +48,7 @@ export function ConnectAccountDrawer({
             <DrawerHeader>
               <DrawerTitle>Connect MCOC Account</DrawerTitle>
               <DrawerDescription>
-                Enter your Kabam account credentials to connect your Marvel
-                Contest of Champions account.
+                Enter your Kabam account credentials to enable auto-claiming.
               </DrawerDescription>
             </DrawerHeader>
 
@@ -90,15 +85,8 @@ export function ConnectAccountDrawer({
               </FieldGroup>
 
               <DrawerFooter>
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="w-full"
-                  disabled={isLoading}
-                >
-                  {isLoading && (
-                    <Loader2Icon className="mr-2 size-4 animate-spin" />
-                  )}
+                <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
+                  {isLoading && <Loader2Icon className="mr-2 size-4 animate-spin" />}
                   Connect Account
                 </Button>
                 <Button
@@ -114,9 +102,8 @@ export function ConnectAccountDrawer({
               </DrawerFooter>
             </form>
 
-            <p className="text-muted-foreground mt-4 text-center text-xs">
-              Your credentials are used only to authenticate with Kabam and are
-              never stored on our servers.
+            <p className="text-muted-foreground/60 mt-4 text-center text-[11px]">
+              Your credentials are used only to authenticate and are never stored.
             </p>
           </DrawerContent>
         </Drawer.View>
